@@ -24,3 +24,60 @@
 
 ## The grading breakdown is depicted in the rubric below
 
+### 20% 
+- Deployed to the Web
+  - Node.js app successfully
+deployed to Heroku and
+connects to MongoDB using
+config vars. Student also went
+above and beyond (for
+example, minified or
+obfuscated code)
+
+### 20%
+- OAuth
+  - OAuth is incorporated in
+professional manner. All
+relevant routes are secured.
+
+### 15%
+- Database
+  -The database is wellorganized, has multiple
+collections, and relatively
+complex documents (see
+description above)
+
+### 15%
+- HTTP Requests
+  - GET, POST, PUT, and DELETE
+requests are fully functional
+and professionally written.
+Includes several requests of
+each type
+
+### 10%
+- API Documentation
+  - API project as a whole is
+documented; all API routes
+are accurately documented in
+the API documentation;
+requests can run from the
+docs; docs are professional
+
+### 10%
+- Error Handling
+  - Every API route handles
+errors gracefully and
+professionally, accounting for
+multiple different types of
+potential errors 
+
+### 10%
+- Data Validation
+  - Data validation is concise,
+precise and professional. All
+data retrieved from API
+requests is validated before
+processing requests or
+sending anything to database
+
