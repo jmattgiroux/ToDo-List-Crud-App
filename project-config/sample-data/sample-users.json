@@ -1,0 +1,46 @@
+[
+  {
+    "firstName": "Bruce",
+    "lastName": "Wayne",
+    "email": "notBatman@wayne.industries",
+    "favoriteColor": "Black",
+    "birthday": "04/17/1915",
+    "favoriteAnimal": "bat",
+    "favoriteFood": "Fruit",
+    "favoriteSong": "My Way",
+    "userCreationDate": "06/20/2022"
+  },
+  {
+    "firstName": "Clark",
+    "lastName": "Kent",
+    "email": "kClark@DailyPlanet.com",
+    "favoriteColor": "Yellow",
+    "birthday": "02/29/1938",
+    "favoriteAnimal": "bat",
+    "favoriteFood": "Fruit",
+    "favoriteSong": "My Way",
+    "userCreationDate": "06/20/2022"
+  },
+  {
+    "firstName": "Hal",
+    "lastName": "Jordan",
+    "email": "aintEasyBeing@green.com",
+    "favoriteColor": "Green",
+    "birthday": "02/20/1940",
+    "favoriteAnimal": "bat",
+    "favoriteFood": "Fruit",
+    "favoriteSong": "My Way",
+    "userCreationDate": "06/20/2022"
+  },
+  {
+    "firstName": "Terry",
+    "lastName": "McGinnis",
+    "email": "batman@beyond.net",
+    "favoriteColor": "Blue",
+    "birthday": "08/18/2023",
+    "favoriteAnimal": "bat",
+    "favoriteFood": "Fruit",
+    "favoriteSong": "My Way",
+    "userCreationDate": "06/20/2022"
+  }
+]
