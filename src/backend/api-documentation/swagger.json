@@ -5,10 +5,10 @@
     "description": "ToDo List API",
     "version": "1.0.0"
   },
-  "host": "https://jmg-todo-list-crud-app.herokuapp.com/",
+  "host": "localhost:8080",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
     "/user/": {

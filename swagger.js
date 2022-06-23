@@ -6,10 +6,10 @@ const doc = {
         description: "ToDo List API",
     },
 
-    // host: "localhost:8080",
-    // schemes: ["http"]
-    host: "https://jmg-todo-list-crud-app.herokuapp.com/",
-    schemes: ["https"]
+    host: "localhost:8080",
+    schemes: ["http"]
+    // host: "https://jmg-todo-list-crud-app.herokuapp.com/",
+    // schemes: ["https"]
 };
 
 const outputFile = "./src/backend/api-documentation/swagger.json";
