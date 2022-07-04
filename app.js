@@ -1,7 +1,7 @@
 
 const dotenv = require("dotenv");
 dotenv.config();
-const url = process.env.url;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
@@ -25,7 +25,7 @@ app.listen(3000, () => {
 
 const mongoose = require('mongoose');
 
-mongoose.connect(url)
+mongoose.connect(MONGODB_URI)
 
 mongoose.connection.once('open', () => {
     console.log('connected to database');
