@@ -7,6 +7,18 @@ const schema = require('./schema/schema');
 
 const app = express();
 
+const dotenv = require("dotenv");
+dotenv.config();
+
+
+const url = process.env.MONGODB_URI;
+
+const mongoose = require('mongoose');
+
+mongoose.connect(url);
+
+
+
 //This route will be used as an endpoint to interact with Graphql, 
 //All queries will go through this route. 
 app.use('/graphql', graphqlHTTP({
@@ -19,4 +31,8 @@ app.use('/graphql', graphqlHTTP({
 
 app.listen(3000, () => {
     console.log('Listening on port 3000');
-}); 
+});
+
+mongoose.connection.once('open', () => {
+    console.log('connected to database');
+});
