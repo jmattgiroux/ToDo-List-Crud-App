@@ -5,9 +5,9 @@
     "node": "16.15.1"
   },
   "description": "Project for CSE 341",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node ./index.js"
+    "start": "node ./app.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "express": "^4.18.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.8.0",
+    "mongodb": "^4.7.0",
     "mongoose": "^6.4.2"
   }
 }
