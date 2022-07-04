@@ -1,38 +1,38 @@
-// app.js for todo-list-crud-app, app starts here
+// Code for this file was imported from 
+// https://medium.com/@utkarshprakash/setting-up-graphql-server-with-nodejs-express-and-mongodb-d72fba13216
 
-const bodyParser = require("body-parser");
-const app = require("express")();
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./src/backend/api-documentation/swagger.json');
-const mongoDatabase = require("./src/backend/database/database-model.js");
+const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./schema/schema');
 
-const PORT = process.env.PORT || 8080;
+const app = express();
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const dotenv = require("dotenv");
+dotenv.config();
 
-app
-    .use(bodyParser.json())
-    .use((req, res, next) => {
-        res.setHeader(
-            "Access-Control-Allow-Origin",
-            "*"
-            // "https://cse341-contacts-frontend.netlify.app/"
-        );
-        res.setHeader(
-            "Access-Control-Allow-Headers",
-            "Origin, X-Requested-With, Content-Type, Accept, Z-Key"
-        );
-        res.setHeader("Content-Type", "application/json");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        next();
-    })
-    .use("/", require("./src/backend/database/database-routes.js"));
 
-mongoDatabase.initDatabase((error) => {
-    if (error) {
-        console.log(error);
-    } else {
-        app.listen(PORT);
-        console.log(`Connected to database and listening on ${PORT}`);
-    }
+const url = process.env.MONGODB_URI;
+
+const mongoose = require('mongoose');
+
+mongoose.connect(url);
+
+
+
+//This route will be used as an endpoint to interact with Graphql, 
+//All queries will go through this route. 
+app.use('/graphql', graphqlHTTP({
+    //directing express-graphql to use this schema to map out the graph 
+    schema,
+    //directing express-graphql to use graphiql when goto '/graphql' address in the browser
+    //which provides an interface to make GraphQl queries
+    graphiql: true
+}));
+
+app.listen(3000, () => {
+    console.log('Listening on port 3000');
+});
+
+mongoose.connection.once('open', () => {
+    console.log('connected to database');
 });
