@@ -10,6 +10,7 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 
+const port = process.env.PORT || 3000;
 
 const url = process.env.MONGODB_URI;
 
@@ -29,8 +30,8 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true
 }));
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
+app.listen(port, () => {
+    console.log('Listening on port ' + port);
 });
 
 mongoose.connection.once('open', () => {
