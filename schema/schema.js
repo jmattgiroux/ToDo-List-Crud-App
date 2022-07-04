@@ -1,6 +1,8 @@
 const graphql = require('graphql');
-const Book = require('../models/book');
-const Author = require('../models/author');
+const User = require('../models/user');
+const Task = require('../models/task');
+const SubTask = require('../models/subTask');
+const Manager = require('../models/manager');
 
 const {
     GraphQLObjectType, GraphQLString,
@@ -8,42 +10,88 @@ const {
     GraphQLList, GraphQLNonNull
 } = graphql;
 
-//Schema defines data on the Graph like object types(book type), relation between 
-//these object types and describes how it can reach into the graph to interact with 
-//the data to retrieve or mutate the data   
+//Schema defines data on the Graph like object types(book type), relation between
+//these object types and describes how it can reach into the graph to interact with
+//the data to retrieve or mutate the data
 
-const BookType = new GraphQLObjectType({
-    name: 'Book',
-    //We are wrapping fields in the function as we dont want to execute this ultil 
-    //everything is inilized. For example below code will throw error AuthorType not 
-    //found if not wrapped in a function
+const SubTaskType = new GraphQLObjectType({
+    name: 'SubTask',
     fields: () => ({
         id: { type: GraphQLID },
-        name: { type: GraphQLString },
-        pages: { type: GraphQLInt },
-        author: {
-            type: AuthorType,
+        title: { type: GraphQLString },
+        completed: { type: GraphQLInt },
+        task: {
+            type: TaskType,
             resolve(parent, args) {
-                return Author.findById(parent.authorID);
-            }
-        }
-    })
-});
-
-const AuthorType = new GraphQLObjectType({
-    name: 'Author',
-    fields: () => ({
-        id: { type: GraphQLID },
-        name: { type: GraphQLString },
-        age: { type: GraphQLInt },
-        book: {
-            type: new GraphQLList(BookType),
-            resolve(parent, args) {
-                return Book.find({ authorID: parent.id });
+                return Task.findById(parent.taskID);
             }
         }
     })
 })
+
+const TaskType = new GraphQLObjectType({
+    name: 'Task',
+    fields: () => ({
+        id: { type: GraphQLID },
+        title: { type: GraphQLString },
+        description: { type: GraphQLString },
+        completed: { type: GraphQLInt },
+        creationDate: { type: GraphQLString },
+        dueDate: { type: GraphQLString },
+        reminderDate: { type: GraphQLString },
+        priority: { type: GraphQLInt },
+        user: {
+            type: UserType,
+            resolve(parent, args) {
+                return User.findById(parent.userID);
+            }
+        },
+        subTask: {
+            type: new GraphQLList(SubTaskType),
+            resolve(parent, args) {
+                return SubTask.find({ subTaskID: parent.id });
+            }
+        },
+    })
+})
+
+const UserType = new GraphQLObjectType({
+    name: 'User',
+    fields: () => ({
+        id: { type: GraphQLID },
+        userName: { type: GraphQLString },
+        email: { type: GraphQLString },
+        task: {
+            type: new GraphQLList(TaskType),
+            resolve(parent, args) {
+                return Task.find({ userID: parent.id });
+            }
+        },
+        manager: {
+            type: ManagerType,
+            resolve(parent, args) {
+                return Manager.findById(parent.managerID);
+            }
+        }
+    })
+})
+
+const ManagerType = new GraphQLObjectType({
+    name: 'Manager',
+    fields: () => ({
+        id: { type: GraphQLID },
+        userName: { type: GraphQLString },
+        email: { type: GraphQLString },
+        user: {
+            type: new GraphQLList(UserType),
+            resolve(parent, args) {
+                return User.find({ managerID: parent.id });
+            }
+        }
+    })
+})
+
+
 
 //RootQuery describe how users can use the graph and grab data.
 //E.g Root query to get all authors, get all books, get a particular 
@@ -51,8 +99,8 @@ const AuthorType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        book: {
-            type: BookType,
+        subTask: {
+            type: SubTaskType,
             //argument passed by the user while making the query
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
@@ -60,26 +108,65 @@ const RootQuery = new GraphQLObjectType({
 
                 //this will return the book with id passed in argument 
                 //by the user
-                return Book.findById(args.id);
+                return SubTask.findById(args.id);
             }
         },
-        books: {
-            type: new GraphQLList(BookType),
+        subTasks: {
+            type: new GraphQLList(SubTaskType),
             resolve(parent, args) {
-                return Book.find({});
+                return SubTask.find({});
             }
         },
-        author: {
-            type: AuthorType,
+        task: {
+            type: TaskType,
+            //argument passed by the user while making the query
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                return Author.findById(args.id);
+                //Here we define how to get data from database source
+
+                //this will return the book with id passed in argument 
+                //by the user
+                return Task.findById(args.id);
             }
         },
-        authors: {
-            type: new GraphQLList(AuthorType),
+        tasks: {
+            type: new GraphQLList(TaskType),
             resolve(parent, args) {
-                return Author.find({});
+                return Task.find({});
+            }
+        },
+        user: {
+            type: UserType,
+            //argument passed by the user while making the query
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args) {
+                //Here we define how to get data from database source
+                //this will return the book with id passed in argument 
+                //by the user
+                return User.findById(args.id);
+            }
+        },
+        users: {
+            type: new GraphQLList(UserType),
+            resolve(parent, args) {
+                return User.find({});
+            }
+        },
+        manager: {
+            type: ManagerType,
+            //argument passed by the user while making the query
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args) {
+                //Here we define how to get data from database source
+                //this will return the book with id passed in argument 
+                //by the user
+                return Manager.findById(args.id);
+            }
+        },
+        managers: {
+            type: new GraphQLList(ManagerType),
+            resolve(parent, args) {
+                return Manager.find({});
             }
         }
     }
@@ -89,37 +176,80 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
-        addAuthor: {
-            type: AuthorType,
+        addSubTask: {
+            type: SubTaskType,
             args: {
-                //GraphQLNonNull make these field required
-                name: { type: new GraphQLNonNull(GraphQLString) },
-                age: { type: new GraphQLNonNull(GraphQLInt) }
+                title: { type: GraphQLNonNull(GraphQLString) },
+                completed: { type: GraphQLNonNull(GraphQLInt) },
+                taskID: { type: GraphQLNonNull(GraphQLID) }
             },
             resolve(parent, args) {
-                let author = new Author({
-                    name: args.name,
-                    age: args.age
-                });
-                return author.save();
+                let subTask = new SubTask({
+                    title: args.title,
+                    completed: args.completed,
+                    taskID: args.taskID
+                })
+                return subTask.save()
             }
         },
-        addBook: {
-            type: BookType,
+        addTask: {
+            type: TaskType,
             args: {
-                name: { type: new GraphQLNonNull(GraphQLString) },
-                pages: { type: new GraphQLNonNull(GraphQLInt) },
-                authorID: { type: new GraphQLNonNull(GraphQLID) }
+                title: { type: GraphQLNonNull(GraphQLString) },
+                description: { type: GraphQLNonNull(GraphQLString) },
+                completed: { type: GraphQLNonNull(GraphQLInt) },
+                creationDate: { type: GraphQLNonNull(GraphQLString) },
+                dueDate: { type: GraphQLNonNull(GraphQLString) },
+                reminderDate: { type: GraphQLNonNull(GraphQLString) },
+                priority: { type: GraphQLNonNull(GraphQLInt) },
+                userID: { type: GraphQLNonNull(GraphQLID) }
             },
             resolve(parent, args) {
-                let book = new Book({
-                    name: args.name,
-                    pages: args.pages,
-                    authorID: args.authorID
+                let task = new Task({
+                    title: args.title,
+                    description: args.description,
+                    completed: args.completed,
+                    creationDate: args.creationDate,
+                    dueDate: args.dueDate,
+                    reminderDate: args.reminderDate,
+                    priority: args.priority,
+                    userID: args.userID
                 })
-                return book.save()
+                return task.save()
             }
-        }
+        },
+        addUser: {
+            type: UserType,
+            args: {
+                //GraphQLNonNull make these field required
+                userName: { type: GraphQLNonNull(GraphQLString) },
+                email: { type: GraphQLNonNull(GraphQLString) },
+                managerID: { type: GraphQLNonNull(GraphQLID) },
+            },
+            resolve(parent, args) {
+                let user = new User({
+                    userName: args.userName,
+                    email: args.email,
+                    managerID: args.managerID
+                });
+                return user.save();
+            }
+        },
+        addManager: {
+            type: ManagerType,
+            args: {
+                //GraphQLNonNull make these field required
+                userName: { type: GraphQLNonNull(GraphQLString) },
+                email: { type: GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parent, args) {
+                let manager = new Manager({
+                    userName: args.userName,
+                    email: args.email
+                });
+                return manager.save();
+            }
+        },
     }
 });
 
