@@ -9,6 +9,8 @@ const schema = require('./schema/schema')
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 //This route will be used as an endpoint to interact with Graphql, 
 //All queries will go through this route. 
 app.use('/graphql', graphqlHTTP({
@@ -19,8 +21,8 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true
 }));
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
 });
 
 const mongoose = require('mongoose');

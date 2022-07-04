@@ -7,7 +7,7 @@
   "description": "Project for CSE 341",
   "main": "app.js",
   "scripts": {
-    "start": "node ./app/app.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
